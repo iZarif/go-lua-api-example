@@ -45,27 +45,36 @@ func l_sqlSflow(l *lua.State) int {
   return 1
 }
 
-func l_getItemAddress(l *lua.State) int {
-  item := lua.CheckUserData(l, 1, "my.item").(item_t)
+func l_indexItem(l *lua.State) int {
+  item := l.ToUserData(1).(item_t)
+  key, _ := l.ToString(2)
 
-  l.PushString(item.address)
+  switch key {
+    case "address":
+      l.PushString(item.address)
+    default:
+      l.PushNil()
+  }
 
   return 1
 }
 
-
 func main() {
   l := lua.NewState()
   lua.OpenLibraries(l)
+
+  itemMetaFuncs := []lua.RegistryFunction{
+    {"__index", l_indexItem},
+  }
+
   lua.NewMetaTable(l, "my.item")
+  lua.SetFunctions(l, itemMetaFuncs, 0)
 
   myLibrary := []lua.RegistryFunction{
     {"sin", l_sin},
     {"sqlSflow", l_sqlSflow},
     {"isItem", l_isItem},
-    {"getItemAddress", l_getItemAddress},
   }
-
 
   lua.NewLibrary(l, myLibrary)
   l.SetGlobal("my")

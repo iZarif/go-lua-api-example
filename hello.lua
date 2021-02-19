@@ -9,4 +9,4 @@ end
 print(my.isItem(items[1]))
 print(my.isItem(1))
 
-print(my.getItemAddress(items[3]))
+print(items[3].address)
