@@ -3,6 +3,9 @@ package main
 import "github.com/Shopify/go-lua"
 import "math"
 
+const moduleName = "my"
+const itemMetaTableName = moduleName + ".item"
+
 type item_t struct {
 	x       int
 	y       int
@@ -16,7 +19,7 @@ func l_sin(l *lua.State) int {
 }
 
 func l_isItem(l *lua.State) int {
-	item := lua.TestUserData(l, 1, "my.item")
+	item := lua.TestUserData(l, 1, itemMetaTableName)
 
 	if item != nil {
 		l.PushBoolean(true)
@@ -29,7 +32,7 @@ func l_isItem(l *lua.State) int {
 
 func l_pushItem(l *lua.State, item *item_t) {
 	l.PushUserData(item)
-	lua.SetMetaTableNamed(l, "my.item")
+	lua.SetMetaTableNamed(l, itemMetaTableName)
 }
 
 func l_sqlSflow(l *lua.State) int {
@@ -69,18 +72,18 @@ func main() {
 		{"__index", l_indexItem},
 	}
 
-	lua.NewMetaTable(l, "my.item")
+	lua.NewMetaTable(l, itemMetaTableName)
 	lua.SetFunctions(l, itemMetaFuncs, 0)
 
-	myLibrary := []lua.RegistryFunction{
+	funcs := []lua.RegistryFunction{
 		{"sin", l_sin},
 		{"sqlSflow", l_sqlSflow},
 		{"isItem", l_isItem},
 	}
 
 	lua.SubTable(l, lua.RegistryIndex, "_LOADED")
-	l.PushString("my")
-	lua.NewLibrary(l, myLibrary)
+	l.PushString(moduleName)
+	lua.NewLibrary(l, funcs)
 	l.RawSet(-3)
 
 	if err := lua.DoFile(l, "hello.lua"); err != nil {
