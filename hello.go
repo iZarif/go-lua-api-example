@@ -3,8 +3,22 @@ package main
 import "github.com/Shopify/go-lua"
 import "math"
 
-func my_sin(l *lua.State) int {
+func l_sin(l *lua.State) int {
   l.PushNumber(math.Sin(lua.CheckNumber(l, 1)))
+
+  return 1
+}
+
+func l_sqlSflow(l *lua.State) int {
+  statement := lua.CheckString(l, 1)
+  items := sql_sflow(statement)
+  l.NewTable()
+
+  for idx, item := range items {
+    l.PushInteger(idx+1)
+    l.PushUserData(item)
+    l.RawSet(-3)
+  }
 
   return 1
 }
@@ -14,11 +28,13 @@ func main() {
   lua.OpenLibraries(l)
 
   var myLibrary = []lua.RegistryFunction{
-    {"my_sin", my_sin},
+    {"sin", l_sin},
+    {"sqlSflow", l_sqlSflow},
   }
 
-  l.Global("_G")
-  lua.SetFunctions(l, myLibrary, 0)
+
+  lua.NewLibrary(l, myLibrary)
+  l.SetGlobal("my")
 
   if err := lua.DoFile(l, "hello.lua"); err != nil {
     panic(err)

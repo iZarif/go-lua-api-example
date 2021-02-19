@@ -1,1 +1,9 @@
-print("Test of custom my_sin function " .. my_sin(5))
+print(my.sin(5))
+
+local items = my.sqlSflow()
+
+for i, v in ipairs(items) do
+      print(i, v)
+end
+
+
