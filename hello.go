@@ -6,6 +6,7 @@ import "math"
 type item_t struct {
   x int
   y int
+  address string
 }
 
 func l_sin(l *lua.State) int {
@@ -32,7 +33,7 @@ func l_pushItem(l *lua.State, item item_t) {
 func l_sqlSflow(l *lua.State) int {
   //statement := lua.CheckString(l, 1)
   // items := sql_sflow(statement)
-  items := []item_t{{0, 0}, {0, 1}, {0, 3}}
+  items := []item_t{{0, 0, "add1"}, {0, 1, "add2"}, {0, 3, "add3"}}
   l.NewTable()
 
   for idx, item := range items {
@@ -44,6 +45,15 @@ func l_sqlSflow(l *lua.State) int {
   return 1
 }
 
+func l_getItemAddress(l *lua.State) int {
+  item := lua.CheckUserData(l, 1, "my.item").(item_t)
+
+  l.PushString(item.address)
+
+  return 1
+}
+
+
 func main() {
   l := lua.NewState()
   lua.OpenLibraries(l)
@@ -53,6 +63,7 @@ func main() {
     {"sin", l_sin},
     {"sqlSflow", l_sqlSflow},
     {"isItem", l_isItem},
+    {"getItemAddress", l_getItemAddress},
   }
 
 
