@@ -14,11 +14,11 @@ func main() {
   lua.OpenLibraries(l)
 
   var myLibrary = []lua.RegistryFunction{
-    {"sin", my_sin},
+    {"my_sin", my_sin},
   }
 
-  lua.NewLibrary(l, myLibrary)
-  l.SetGlobal("my")
+  l.Global("_G")
+  lua.SetFunctions(l, myLibrary, 0)
 
   if err := lua.DoFile(l, "hello.lua"); err != nil {
     panic(err)

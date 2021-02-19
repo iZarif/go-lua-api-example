@@ -1,1 +1,1 @@
-print("Test of custom my.sin function " .. my.sin(5))
+print("Test of custom my_sin function " .. my_sin(5))
