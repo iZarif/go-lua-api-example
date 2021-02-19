@@ -16,7 +16,9 @@ func l_sin(l *lua.State) int {
 }
 
 func l_isItem(l *lua.State) int {
-  if (lua.TestUserData(l, 1, "my.item") != nil) {
+  item := lua.TestUserData(l, 1, "my.item")
+
+  if (item != nil) {
     l.PushBoolean(true)
   } else {
     l.PushBoolean(false)
@@ -25,7 +27,7 @@ func l_isItem(l *lua.State) int {
   return 1
 }
 
-func l_pushItem(l *lua.State, item item_t) {
+func l_pushItem(l *lua.State, item *item_t) {
   l.PushUserData(item)
   lua.SetMetaTableNamed(l, "my.item")
 }
@@ -36,9 +38,9 @@ func l_sqlSflow(l *lua.State) int {
   items := []item_t{{0, 0, "add1"}, {0, 1, "add2"}, {0, 3, "add3"}}
   l.NewTable()
 
-  for idx, item := range items {
-    l.PushInteger(idx+1)
-    l_pushItem(l, item)
+  for i := 0; i < len(items); i++ {
+    l.PushInteger(i + 1)
+    l_pushItem(l, &items[i])
     l.RawSet(-3)
   }
 
@@ -46,7 +48,7 @@ func l_sqlSflow(l *lua.State) int {
 }
 
 func l_indexItem(l *lua.State) int {
-  item := l.ToUserData(1).(item_t)
+  item := l.ToUserData(1).(*item_t)
   key, _ := l.ToString(2)
 
   switch key {
