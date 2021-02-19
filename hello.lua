@@ -6,4 +6,5 @@ for i, v in ipairs(items) do
       print(i, v)
 end
 
-
+print(my.isItem(items[1]))
+print(my.isItem(1))
