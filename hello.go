@@ -78,8 +78,10 @@ func main() {
 		{"isItem", l_isItem},
 	}
 
+	lua.SubTable(l, lua.RegistryIndex, "_LOADED")
+	l.PushString("my")
 	lua.NewLibrary(l, myLibrary)
-	l.SetGlobal("my")
+	l.RawSet(-3)
 
 	if err := lua.DoFile(l, "hello.lua"); err != nil {
 		panic(err)

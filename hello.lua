@@ -1,3 +1,5 @@
+local my = require("my")
+
 print(my.sin(5))
 
 local items = my.sqlSflow()
