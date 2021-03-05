@@ -3,7 +3,7 @@ package main
 import "github.com/Shopify/go-lua"
 import "math"
 
-const moduleName = "my"
+const moduleName = "hello"
 const itemMetaTableName = moduleName + ".item"
 
 type item_t struct {

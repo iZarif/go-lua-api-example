@@ -1,14 +1,14 @@
-local my = require("my")
+local hello = require("hello")
 
-print(my.sin(5))
+print(hello.sin(5))
 
-local items = my.sqlSflow()
+local items = hello.sqlSflow("statement")
 
 for i, v in ipairs(items) do
       print(i, v)
 end
 
-print(my.isItem(items[1]))
-print(my.isItem(1))
+print(hello.isItem(items[1]))
+print(hello.isItem(1))
 
 print(items[3].address)
