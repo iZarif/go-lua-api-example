@@ -36,8 +36,7 @@ func l_pushItem(l *lua.State, item *item_t) {
 }
 
 func l_sqlSflow(l *lua.State) int {
-	//statement := lua.CheckString(l, 1)
-	// items := sql_sflow(statement)
+	lua.CheckString(l, 1)
 	items := []item_t{{0, 0, "add1"}, {0, 1, "add2"}, {0, 3, "add3"}}
 	l.NewTable()
 
